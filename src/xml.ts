@@ -1,5 +1,6 @@
 import { Song, XmlifyableSong } from './definitions/song';
 import { LegacyCategory, LEGACY_MAP, LEGACY_ORDER, UNKNOWN } from './definitions/tags';
+import { sortXmlifyableSongs } from './songs';
 
 export const SONGS_DESCRIPTION =
 	'IN-sektionens sångbok, Strängteoretiquernas reviderade version (2009-2015)';
@@ -61,18 +62,11 @@ export function buildXmlString(songs: Song[], updatedAt: string, withId: boolean
 	xml += `<songs description="${SONGS_DESCRIPTION}" updated="${updatedAt}">\n`;
 
 	const xmlifyAblesongs = songs.map((song) => generateXmlifyableSong(song));
-	xmlifyAblesongs
-		.sort(
-			(a, b) =>
-				LEGACY_ORDER.findIndex((cat) => a.category === cat) -
-				LEGACY_ORDER.findIndex((cat) => b.category === cat)
-		)
-		.sort((a, b) => (b.sorting || 0) - (a.sorting || 0))
-		.forEach((song) => {
-			xml += `\t<song${songToXmlAttributes(song, withId)}\n\t>\n`;
-			xml += songContentToXml(song.content);
-			xml += '\t</song>\n';
-		});
+	sortXmlifyableSongs(xmlifyAblesongs).forEach((song) => {
+		xml += `\t<song${songToXmlAttributes(song, withId)}\n\t>\n`;
+		xml += songContentToXml(song.content);
+		xml += '\t</song>\n';
+	});
 	xml += '</songs>\n';
 
 	return xml;

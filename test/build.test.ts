@@ -7,14 +7,14 @@ import {
 	XML_NO_IDS_SONGS_PATH,
 	XML_SONGS_PATH,
 } from '../src/definitions/paths';
-import { getAllSongs } from '../src/songs';
+import { getAllSongs, sortSongs } from '../src/songs';
 import { buildXmlString } from '../src/xml';
 
 describe('Builds are up to date', () => {
 	test('JSON', () => {
 		const { songs, updatedAt } = JSON.parse(readFileSync(JSON_SONGS_PATH).toString());
 
-		expect(songs).toEqual(getAllSongs().map(({ sorting, ...song }) => song));
+		expect(songs).toEqual(sortSongs(getAllSongs()).map(({ sorting, ...song }) => song));
 		expect(updatedAt).toMatch(/^\d{4}-(0\d|1[012])-([012]\d|3[01])$/);
 	});
 

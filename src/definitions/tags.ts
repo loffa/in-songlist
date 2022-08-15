@@ -1,3 +1,4 @@
+// Categories
 export const GASUQUE = 'gasque';
 export const BEER = 'beer';
 export const WINE = 'wine';
@@ -7,7 +8,7 @@ export const FOREIGN = 'foreign';
 export const NERDY = 'nerdy';
 export const ESOTERIC = 'esoteric';
 export const SOLEMN = 'solemn';
-
+// Languages
 export const SWE = 'swe';
 export const ENG = 'eng';
 
@@ -53,6 +54,19 @@ export const LEGACY_ORDER = [
 	LEGACY_MAP[ESOTERIC],
 	LEGACY_MAP[SOLEMN],
 	LEGACY_MAP[UNKNOWN],
+];
+
+export const CATEGORY_ORDER = [
+	GASUQUE,
+	BEER,
+	WINE,
+	SNAPS,
+	PUNSCH,
+	FOREIGN,
+	NERDY,
+	ESOTERIC,
+	SOLEMN,
+	UNKNOWN,
 ];
 
 export type Tag = typeof TAGS[number];

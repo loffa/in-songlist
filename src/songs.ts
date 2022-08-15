@@ -1,9 +1,10 @@
 import { readdirSync, readFileSync, writeFileSync } from 'fs';
 import * as matter from 'gray-matter';
 import { join } from 'path';
-import { Song } from './definitions/song';
+import { Song, XmlifyableSong } from './definitions/song';
 import { getIdFromFileName } from './generateFileName';
 import { SONGS_FOLDER_PATH } from './definitions/paths';
+import { CATEGORY_ORDER, LEGACY_ORDER } from './definitions/tags';
 
 export function getFilePathFromId(id: number): string | undefined {
 	const files = readdirSync(SONGS_FOLDER_PATH);
@@ -73,4 +74,24 @@ export function updateSong(song: Partial<Song> & { id: number }): void {
 	const filePath = getFilePathFromId(song.id);
 
 	writeFileSync(filePath, fileContent);
+}
+
+export function sortXmlifyableSongs(songs: XmlifyableSong[]): XmlifyableSong[] {
+	return songs
+		.sort(
+			(a, b) =>
+				LEGACY_ORDER.findIndex((category) => a.category === category) -
+				LEGACY_ORDER.findIndex((category) => b.category === category)
+		)
+		.sort((a, b) => (b.sorting || 0) - (a.sorting || 0));
+}
+
+export function sortSongs(songs: Song[]): Song[] {
+	return songs
+		.sort(
+			(a, b) =>
+				CATEGORY_ORDER.findIndex((category) => a.tags[0] === category) -
+				CATEGORY_ORDER.findIndex((category) => b.tags[0] === category)
+		)
+		.sort((a, b) => (b.sorting || 0) - (a.sorting || 0));
 }

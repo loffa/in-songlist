@@ -9,7 +9,7 @@ import {
 	XML_NO_IDS_SONGS_PATH,
 	XML_SONGS_PATH,
 } from '../definitions/paths';
-import { getAllSongs } from '../songs';
+import { getAllSongs, sortSongs } from '../songs';
 import { join } from 'path';
 
 export default function build(customUpdatedAt: string | undefined): void {
@@ -18,10 +18,7 @@ export default function build(customUpdatedAt: string | undefined): void {
 		? customUpdatedAt
 		: new Date().toLocaleDateString();
 
-	writeJson(
-		songs.map(({ sorting, ...song }) => song),
-		updatedAt
-	);
+	writeJson(songs, updatedAt);
 	writeXml(songs, updatedAt);
 	writeXmlWithoutIds(songs, updatedAt);
 	console.log('Build complete and saved');
@@ -39,9 +36,10 @@ export default function build(customUpdatedAt: string | undefined): void {
 }
 
 export function writeJson(songs: Song[], updatedAt: string) {
+	const sortedSongs = sortSongs(songs).map(({ sorting, ...songs }) => songs);
 	writeFileSync(
 		JSON_SONGS_PATH,
-		format(JSON.stringify({ songs, updatedAt }), { parser: 'json', useTabs: true })
+		format(JSON.stringify({ songs: sortedSongs, updatedAt }), { parser: 'json', useTabs: true })
 	);
 }
 
